@@ -1,0 +1,25 @@
+<div class="login-box">
+    <h2>Inscription</h2>
+    <form #signupForm="ngForm" (ngSubmit)="onSubmit(signupForm)">
+      <div class="user-box">
+        <input type="text" name="email" [(ngModel)]="user.email" required>
+        <label>Email</label>
+      </div>
+      <div class="user-box">
+        <input type="password" name="password" minlength="8" [(ngModel)]="user.password" required>
+        <label>Mot de passe</label>
+      </div>
+
+      <button type= "submit" >
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        Submit
+      </button>
+      <div class="titre">
+        <p>Vous avez déjà un compte?</p>
+        <a routerLink="/login">Connectez-vous</a>
+      </div>
+    </form>
+</div>

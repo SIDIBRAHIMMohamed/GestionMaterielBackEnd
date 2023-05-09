@@ -1,0 +1,57 @@
+header {
+  background-color: #fff;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 0px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: 1300px; /* vous pouvez ajuster cette valeur selon vos besoins */
+    margin: 0 auto; /* centre le header horizontalement */
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo a {
+    color: #333;
+    font-size: 28px;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .menu {
+    list-style: none;
+    display: flex;
+  }
+  
+  .menu li {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+  
+  .menu li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .menu li a:hover {
+    color: #f23a3a;
+  }
+  nav a.active {
+    font-weight: bold;
+    color: red;
+  }
+  .logo img {
+    width: 100px;
+    height: auto;
+    margin: 10px;
+  }
+  
+  
