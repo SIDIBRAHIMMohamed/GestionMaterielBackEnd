@@ -1,4 +1,4 @@
-package com.project.contollers;
+package com.project.controllers;
 
 import java.util.List;
 import java.util.Optional;

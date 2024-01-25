@@ -1,7 +1,7 @@
 /**
  * Represents Reservation controller
  */
-package com.project.contollers;
+package com.project.controllers;
 
 import com.project.entities.Materiel;
 import com.project.entities.Reservation;
