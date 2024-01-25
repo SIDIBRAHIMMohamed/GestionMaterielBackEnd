@@ -1,7 +1,7 @@
 /**
- * Represents client controller
+ * Represents Materiel controller
  */
-package com.project.controllers;
+package com.project.contollers;
 
 import com.project.services.MaterielService;
 import com.project.entities.Materiel;
