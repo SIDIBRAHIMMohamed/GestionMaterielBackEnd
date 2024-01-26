@@ -34,9 +34,10 @@ public class MaterielService {
     /**
      * Save materiel
      * @param materiel Materiel
+     * @return Materiel
      */
-    public void saveMateriel(Materiel materiel) {
-        materielRepository.save(materiel);
+    public Materiel saveMateriel(Materiel materiel) {
+        return materielRepository.save(materiel);
     }
 
     /**

@@ -42,6 +42,7 @@ public class MaterielController {
      * @param nom nom
      * @param version version
      * @param ref ref
+     * @return Materiel
      */
     @PostMapping("/add")
     public Materiel addMateriel(@RequestParam String nom, @RequestParam String version, @RequestParam String ref) {
@@ -50,9 +51,7 @@ public class MaterielController {
             // Create materiel object :
             Materiel materiel = new Materiel(nom, version, ref, 0);
             // Add materiel :
-            materielService.saveMateriel(materiel);
-
-            return materiel;
+            return materielService.saveMateriel(materiel);
         }
 
         return null;
@@ -62,15 +61,20 @@ public class MaterielController {
      * Update materiel
      * @param idMateriel id
      * @param nom nom
+     * @param version version
+     * @param ref ref
      */
     @PutMapping("/update/{idMateriel}")
-    public void updateMateriel(@PathVariable int idMateriel, @RequestParam String nom) {
+    public void updateMateriel(@PathVariable int idMateriel, @RequestParam String nom,
+                               @RequestParam String version, @RequestParam String ref) {
         // Get materiel :
         Materiel materiel = materielService.getMaterielFromDB(idMateriel);
         // If materiel was found :
         if (materiel != null) {
             // Update values :
             materiel.setNom(nom);
+            materiel.setVersion(version);
+            materiel.setRef(ref);
             // Save :
             materielService.saveMateriel(materiel);
         }

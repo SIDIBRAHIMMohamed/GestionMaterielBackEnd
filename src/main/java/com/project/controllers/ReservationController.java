@@ -44,27 +44,24 @@ public class ReservationController {
      * @param dateFin end date
      * @param idUtilisateur user id
      * @param idMateriel material id
+     * @return Reservation
      */
     @PostMapping("/makeReservation")
-    public void makeReservation(@RequestParam String dateDebut, @RequestParam String dateFin,
-                                @RequestParam Long idUtilisateur, @RequestParam int idMateriel) {
-        try {
-            // Get user :
-            Optional<Utilisateur> utilisateurOptional = utilisateurService.obtenirUtilisateurParId(idUtilisateur);
-            // Get material :
-            Materiel materiel = materielService.getMaterielFromDB(idMateriel);
-            // Check if material and user are valid :
-            if (materiel != null && utilisateurOptional.isPresent()) {
-                // Get dates :
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Date dateDeDebut = dateFormat.parse(dateDebut);
-                Date dateDeFin = dateFormat.parse(dateFin);
-                // save reservation :
-                reservationService.saveReservation(new Reservation(dateDeDebut, dateDeFin, utilisateurOptional.get(), materiel));
-            }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
+    public Reservation makeReservation(@RequestParam String dateDebut, @RequestParam String dateFin,
+                                @RequestParam Long idUtilisateur, @RequestParam int idMateriel) throws ParseException {
+        // Get user :
+        Optional<Utilisateur> utilisateurOptional = utilisateurService.obtenirUtilisateurParId(idUtilisateur);
+        // Get material :
+        Materiel materiel = materielService.getMaterielFromDB(idMateriel);
+        // Check if material and user are valid :
+        if (materiel == null || utilisateurOptional.isEmpty()) {
+            return null;
         }
+        // Get dates :
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateDeDebut = dateFormat.parse(dateDebut);
+        Date dateDeFin = dateFormat.parse(dateFin);
+        // save reservation :
+        return reservationService.saveReservation(new Reservation(dateDeDebut, dateDeFin, utilisateurOptional.get(), materiel));
     }
 }

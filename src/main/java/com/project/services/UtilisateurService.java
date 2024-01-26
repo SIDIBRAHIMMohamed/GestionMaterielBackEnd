@@ -43,7 +43,7 @@ public class UtilisateurService {
             utilisateurExistant.setNom(utilisateurDetails.getNom());
             utilisateurExistant.setPrenom(utilisateurDetails.getPrenom());
             utilisateurExistant.setEmail(utilisateurDetails.getEmail());
-            utilisateurExistant.setPassowrd(utilisateurDetails.getPassowrd());  // Vérifiez l'orthographe correcte
+            utilisateurExistant.setPassword(utilisateurDetails.getPassword());  // Vérifiez l'orthographe correcte
             utilisateurExistant.setRole(utilisateurDetails.getRole());
 
             // Enregistrer les modifications

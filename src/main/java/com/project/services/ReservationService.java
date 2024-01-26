@@ -25,8 +25,9 @@ public class ReservationService {
     /**
      * Save reservation
      * @param reservation Reservation
+     * @return Reservation
      */
-    public void saveReservation(Reservation reservation) {
-        reservationRepository.save(reservation);
+    public Reservation saveReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
     }
 }
