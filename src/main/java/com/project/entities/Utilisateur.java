@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
@@ -12,12 +15,27 @@ public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nom;
-    private String prenom;
-    private String email;
-    private String password;
-    private int role; // 1 pour administrateur, 0 pour emprunteur
 
+    @NotNull(message = "Le nom ne peut pas être nul")
+    @Size(min = 2, message = "Le nom doit contenir au moins 2 caractères")
+    private String nom;
+
+    @NotNull(message = "Le prénom ne peut pas être nul")
+    @Size(min = 2, message = "Le prénom doit contenir au moins 2 caractères")
+    private String prenom;
+
+    @Email(message = "L'email doit être valide")
+    private String email;
+
+    @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
+    private String password;
+
+    private int role; // 1 pour administrateur, 0 pour utilisateur
+
+    // Constructeur sans arguments nécessaire pour JPA
+    public Utilisateur() {}
+
+    // Constructeur complet pour faciliter la création d'instances
     public Utilisateur(String nom, String prenom, String email, String password, int role) {
         this.nom = nom;
         this.prenom = prenom;
@@ -26,51 +44,5 @@ public class Utilisateur {
         this.role = role;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public int getRole() {
-        return role;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(int role) {
-        this.role = role;
-    }
+   
 }
