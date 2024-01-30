@@ -14,10 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -60,13 +61,14 @@ public class ReservationControllerTest {
                     new Reservation(simpleDateFormat.parse("2022-02-01"), simpleDateFormat.parse("2022-02-10"), optionalUtilisateur.get(), materiel)
             );
             // Act :
-            Reservation result = reservationController.makeReservation("2022-02-01",
+            ResponseEntity<Reservation> result = reservationController.makeReservation("2022-02-01",
                     "2022-02-10", optionalUtilisateur.get().getId(), idMateriel);
             // Assert :
-            assertEquals(simpleDateFormat.parse("2022-02-01"), result.getDateDebut());
-            assertEquals(simpleDateFormat.parse("2022-02-10"), result.getDateFin());
-            assertEquals(optionalUtilisateur.get(), result.getUtilisateur());
-            assertEquals(materiel, result.getMateriel());
+            assertEquals(HttpStatus.OK, result.getStatusCode());
+            assertEquals(simpleDateFormat.parse("2022-02-01"), result.getBody().getDateDebut());
+            assertEquals(simpleDateFormat.parse("2022-02-10"), result.getBody().getDateFin());
+            assertEquals(optionalUtilisateur.get(), result.getBody().getUtilisateur());
+            assertEquals(materiel, result.getBody().getMateriel());
         } catch (ParseException e) {
             e.printStackTrace();
         }

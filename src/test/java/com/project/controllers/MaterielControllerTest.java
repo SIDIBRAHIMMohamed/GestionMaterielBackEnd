@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,9 +42,10 @@ public class MaterielControllerTest {
         Materiel expectedMateriel = new Materiel("Test", "1.0", "123", 0);
         when(materielService.getMaterielFromDB(idMateriel)).thenReturn(expectedMateriel);
         // Act :
-        Materiel result = materielController.getMateriel(idMateriel);
+        ResponseEntity<Materiel> result = materielController.getMateriel(idMateriel);
         // Assert :
-        assertEquals(expectedMateriel, result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedMateriel, result.getBody());
     }
 
     /**
@@ -56,11 +59,12 @@ public class MaterielControllerTest {
         String ref = "123";
         when(materielService.saveMateriel(any())).thenReturn(new Materiel(nom, version, ref, 0));
         // Act :
-        Materiel result = materielController.addMateriel(nom, version, ref);
+        ResponseEntity<Materiel> result = materielController.addMateriel(nom, version, ref);
         // Assert :
-        assertEquals(nom, result.getNom());
-        assertEquals(version, result.getVersion());
-        assertEquals(ref, result.getRef());
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        assertEquals(nom, result.getBody().getNom());
+        assertEquals(version, result.getBody().getVersion());
+        assertEquals(ref, result.getBody().getRef());
     }
 
     /**
@@ -77,13 +81,14 @@ public class MaterielControllerTest {
         // When calling getMaterielFromDB with idToUpdate, return the existingMateriel
         when(materielService.getMaterielFromDB(idToUpdate)).thenReturn(existingMateriel);
         // Act:
-        materielController.updateMateriel(idToUpdate, newNom, newVersion, newRef);
+        ResponseEntity<Materiel> result = materielController.updateMateriel(idToUpdate, newNom, newVersion, newRef);
         // Assert:
         // Check that saveMateriel was called with the expected updated Materiel object
         Materiel updatedMateriel = new Materiel("Existing", "1.0", "123", 1);
         updatedMateriel.setNom(newNom);
         updatedMateriel.setVersion(newVersion);
         updatedMateriel.setRef(newRef);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(updatedMateriel.getNom(), existingMateriel.getNom());
         assertEquals(updatedMateriel.getVersion(), existingMateriel.getVersion());
         assertEquals(updatedMateriel.getRef(), existingMateriel.getRef());
@@ -99,8 +104,8 @@ public class MaterielControllerTest {
         Materiel materielToDelete = new Materiel("Test", "1.0", "123", 0);
         when(materielService.getMaterielFromDB(idToDelete)).thenReturn(materielToDelete);
         // Act:
-        String result = materielController.deleteMateriel(idToDelete);
+        ResponseEntity<Materiel> result = materielController.deleteMateriel(idToDelete);
         // Verify the result message
-        assertEquals("Delete successfully", result);
+        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
     }
 }

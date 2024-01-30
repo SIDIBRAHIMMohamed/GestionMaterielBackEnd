@@ -10,6 +10,8 @@ import com.project.services.MaterielService;
 import com.project.services.ReservationService;
 import com.project.services.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,24 +46,25 @@ public class ReservationController {
      * @param dateFin end date
      * @param idUtilisateur user id
      * @param idMateriel material id
-     * @return Reservation
+     * @return ResponseEntity
      */
     @PostMapping("/makeReservation")
-    public Reservation makeReservation(@RequestParam String dateDebut, @RequestParam String dateFin,
-                                @RequestParam Long idUtilisateur, @RequestParam int idMateriel) throws ParseException {
+    public ResponseEntity<Reservation> makeReservation(@RequestParam String dateDebut, @RequestParam String dateFin,
+                                          @RequestParam Long idUtilisateur, @RequestParam int idMateriel) throws ParseException {
         // Get user :
         Optional<Utilisateur> utilisateurOptional = utilisateurService.obtenirUtilisateurParId(idUtilisateur);
         // Get material :
         Materiel materiel = materielService.getMaterielFromDB(idMateriel);
         // Check if material and user are valid :
         if (materiel == null || utilisateurOptional.isEmpty()) {
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         // Get dates :
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date dateDeDebut = dateFormat.parse(dateDebut);
         Date dateDeFin = dateFormat.parse(dateFin);
         // save reservation :
-        return reservationService.saveReservation(new Reservation(dateDeDebut, dateDeFin, utilisateurOptional.get(), materiel));
+        Reservation reservation = reservationService.saveReservation(new Reservation(dateDeDebut, dateDeFin, utilisateurOptional.get(), materiel));
+        return new ResponseEntity<>(reservation, HttpStatus.OK);
     }
 }

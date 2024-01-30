@@ -6,6 +6,8 @@ package com.project.controllers;
 import com.project.services.MaterielService;
 import com.project.entities.Materiel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,16 +27,16 @@ public class MaterielController {
     /**
      * Get a Materiel
      * @param idMateriel id
-     * @return Materiel if exists, null otherwise
+     * @return ResponseEntity
      */
     @GetMapping("/get/{idMateriel}")
-    public Materiel getMateriel(@PathVariable int idMateriel) {
+    public ResponseEntity<Materiel> getMateriel(@PathVariable int idMateriel) {
         // Check if id is valid :
         if (idMateriel > 0) {
-            return materielService.getMaterielFromDB(idMateriel);
+            return new ResponseEntity<>(materielService.getMaterielFromDB(idMateriel), HttpStatus.OK);
         }
 
-        return null;
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 
     /**
@@ -42,19 +44,19 @@ public class MaterielController {
      * @param nom nom
      * @param version version
      * @param ref ref
-     * @return Materiel
+     * @return ResponseEntity
      */
     @PostMapping("/add")
-    public Materiel addMateriel(@RequestParam String nom, @RequestParam String version, @RequestParam String ref) {
+    public ResponseEntity<Materiel> addMateriel(@RequestParam String nom, @RequestParam String version, @RequestParam String ref) {
         // Check if parameters are valid :
         if (!nom.isEmpty() && !version.isEmpty() && !ref.isEmpty()) {
             // Create materiel object :
             Materiel materiel = new Materiel(nom, version, ref, 0);
             // Add materiel :
-            return materielService.saveMateriel(materiel);
+            return new ResponseEntity<>(materielService.saveMateriel(materiel), HttpStatus.CREATED);
         }
 
-        return null;
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -63,9 +65,10 @@ public class MaterielController {
      * @param nom nom
      * @param version version
      * @param ref ref
+     * @return ResponseEntity
      */
     @PutMapping("/update/{idMateriel}")
-    public void updateMateriel(@PathVariable int idMateriel, @RequestParam String nom,
+    public ResponseEntity<Materiel> updateMateriel(@PathVariable int idMateriel, @RequestParam String nom,
                                @RequestParam String version, @RequestParam String ref) {
         // Get materiel :
         Materiel materiel = materielService.getMaterielFromDB(idMateriel);
@@ -76,25 +79,27 @@ public class MaterielController {
             materiel.setVersion(version);
             materiel.setRef(ref);
             // Save :
-            materielService.saveMateriel(materiel);
+            return new ResponseEntity<>(materielService.saveMateriel(materiel), HttpStatus.OK);
         }
+
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
      * Delete a materiel
      * @param idMateriel id
-     * @return message
+     * @return ResponseEntity
      */
     @DeleteMapping("/delete/{idMateriel}")
-    public String deleteMateriel(@PathVariable int idMateriel) {
+    public ResponseEntity<Materiel> deleteMateriel(@PathVariable int idMateriel) {
         // Check if id is valid :
         if (idMateriel > 0) {
             // Delete materiel :
             materielService.deleteMateriel(idMateriel);
 
-            return "Delete successfully";
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         }
 
-        return "id is not valid";
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
