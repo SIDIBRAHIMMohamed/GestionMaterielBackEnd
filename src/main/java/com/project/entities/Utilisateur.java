@@ -23,10 +23,11 @@ public class Utilisateur {
     @NotNull(message = "Le prénom ne peut pas être nul")
     @Size(min = 2, message = "Le prénom doit contenir au moins 2 caractères")
     private String prenom;
-
+    
+    @NotNull()
     @Email(message = "L'email doit être valide")
     private String email;
-
+    @NotNull (message = "Le mot de passe doit pas est null")
     @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
     private String password;
 

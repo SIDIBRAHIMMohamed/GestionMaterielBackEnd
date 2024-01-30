@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.entities.Utilisateur;
 import com.project.services.UtilisateurService;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
@@ -71,14 +74,20 @@ public class UtilisateurController {
     
     
     @PutMapping("/utilisateurs/{id}")
-    public ResponseEntity<Utilisateur> updateUtilisateur(@PathVariable("id") long id, @RequestBody Utilisateur utilisateurDetails) {
-        Utilisateur utilisateurMisAJour = utilisateurservice.modifierUtilisateur(id, utilisateurDetails);
-        if (utilisateurMisAJour != null) {
-            return new ResponseEntity<>(utilisateurMisAJour, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Utilisateur> updateUtilisateur(@PathVariable("id") long id, @Valid @RequestBody Utilisateur utilisateurDetails) {
+        try {
+            Utilisateur utilisateurMisAJour = utilisateurservice.modifierUtilisateur(id, utilisateurDetails);
+            if (utilisateurMisAJour != null) {
+                return new ResponseEntity<>(utilisateurMisAJour, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            // Vous pouvez logger l'exception ici si nécessaire
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     
     
     @DeleteMapping("/utilisateurs/{id}")
@@ -86,10 +95,13 @@ public class UtilisateurController {
         try {
             utilisateurservice.supprimerUtilisateur(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
 
