@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +42,44 @@ public class ReservationControllerTest {
     @BeforeEach
     public void setUp() {
         // To set up any necessary configurations
+    }
+
+    /**
+     * Test makeReservation method when user do not exist
+     */
+    @Test
+    public void testMakeReservationWhenUserDoNotExist() throws ParseException {
+        // Arrange :
+        Long userID = 1L;
+        int idMateriel = 1;
+        Materiel materiel = new Materiel("Test", "1.0", "123", 0);
+        when(utilisateurService.obtenirUtilisateurParId(userID)).thenReturn(Optional.empty());
+        when(materielService.getMaterielFromDB(idMateriel)).thenReturn(materiel);
+        // Act :
+        ResponseEntity<Reservation> response = reservationController.makeReservation("2022-02-01",
+                "2022-02-10", userID, idMateriel);
+        // Assert :
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    /**
+     * Test makeReservation method when materiel do not exist
+     */
+    @Test
+    public void testMakeReservationWhenMaterielDoNotExist() throws ParseException {
+        // Arrange :
+        Optional<Utilisateur> optionalUtilisateur = Optional.of(new Utilisateur("John", "Doe", "john.doe@example.com", "password123", 1));
+        int idMateriel = 1;
+        Long userID = 1L;
+        when(utilisateurService.obtenirUtilisateurParId(userID)).thenReturn(optionalUtilisateur);
+        when(materielService.getMaterielFromDB(idMateriel)).thenReturn(null);
+        // Act :
+        ResponseEntity<Reservation> response = reservationController.makeReservation("2022-02-01",
+                "2022-02-10", userID, idMateriel);
+        // Assert :
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNull(response.getBody());
     }
 
     /**

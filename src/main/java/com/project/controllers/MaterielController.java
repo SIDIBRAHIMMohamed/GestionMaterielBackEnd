@@ -5,6 +5,7 @@ package com.project.controllers;
 
 import com.project.services.MaterielService;
 import com.project.entities.Materiel;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +32,14 @@ public class MaterielController {
      */
     @GetMapping("/get/{idMateriel}")
     public ResponseEntity<Materiel> getMateriel(@PathVariable int idMateriel) {
-        // Check if id is valid :
-        if (idMateriel > 0) {
-            return new ResponseEntity<>(materielService.getMaterielFromDB(idMateriel), HttpStatus.OK);
+        Materiel materiel = materielService.getMaterielFromDB(idMateriel);
+        // Check if materiel is not null :
+        if ( materiel != null) {
+            return new ResponseEntity<>(materiel, HttpStatus.OK);
         }
-
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -82,7 +85,7 @@ public class MaterielController {
             return new ResponseEntity<>(materielService.saveMateriel(materiel), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -92,14 +95,11 @@ public class MaterielController {
      */
     @DeleteMapping("/delete/{idMateriel}")
     public ResponseEntity<Materiel> deleteMateriel(@PathVariable int idMateriel) {
-        // Check if id is valid :
-        if (idMateriel > 0) {
-            // Delete materiel :
+        try {
             materielService.deleteMateriel(idMateriel);
-
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

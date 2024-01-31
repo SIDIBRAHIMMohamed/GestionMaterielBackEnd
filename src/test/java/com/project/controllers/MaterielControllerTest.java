@@ -5,6 +5,7 @@ package com.project.controllers;
 
 import com.project.entities.Materiel;
 import com.project.services.MaterielService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,9 +13,10 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class MaterielControllerTest {
@@ -33,10 +35,10 @@ public class MaterielControllerTest {
     }
 
     /**
-     * Test the getMateriel method
+     * Test the getMateriel method when materiel exists
      */
     @Test
-    public void testGetMateriel() {
+    public void testGetMaterielWhenMaterielExists() {
         // Arrange :
         int idMateriel = 1;
         Materiel expectedMateriel = new Materiel("Test", "1.0", "123", 0);
@@ -49,10 +51,25 @@ public class MaterielControllerTest {
     }
 
     /**
-     * Test the addMateriel method
+     * Test the getMateriel method when materiel doesn't exists
      */
     @Test
-    public void testAddMateriel() {
+    public void testGetMaterielWhenMaterielDoNotExist() {
+        // Arrange :
+        int idMateriel = 1;
+        when(materielService.getMaterielFromDB(idMateriel)).thenReturn(null);
+        // Act :
+        ResponseEntity<Materiel> result = materielController.getMateriel(idMateriel);
+        // Assert :
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+        assertNull(result.getBody());
+    }
+
+    /**
+     * Test the addMateriel method when materiel has been added successfully
+     */
+    @Test
+    public void testAddMaterielWhenMaterielAdded() {
         // Arrange :
         String nom = "Test";
         String version = "1.0";
@@ -68,10 +85,22 @@ public class MaterielControllerTest {
     }
 
     /**
-     * Test updateMateriel method
+     * Test the addMateriel method when materiel has not been added successfully
      */
     @Test
-    public void testUpdateMateriel() {
+    public void testAddMaterielWhenMaterielWasNotAdded() {
+        //Act :
+        ResponseEntity<Materiel> response = materielController.addMateriel("", "2.0", "dd44");
+        // Assert :
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    /**
+     * Test updateMateriel method when materiel was updated successfully
+     */
+    @Test
+    public void testUpdateMaterielWhenMaterielWasUpdated() {
         // Arrange:
         int idToUpdate = 1;
         String newNom = "UpdatedName";
@@ -95,17 +124,46 @@ public class MaterielControllerTest {
     }
 
     /**
-     * Test the deleteMateriel method
+     * Test updateMateriel method when materiel was not updated successfully
      */
     @Test
-    public void testDeleteMateriel() {
-        // Arrange:
+    public void testUpdateMaterielWhenMaterielWasNotUpdated() {
+        // Arrange :
+        int idMateriel = 1;
+        when(materielService.getMaterielFromDB(idMateriel)).thenReturn(null);
+        // Act :
+        ResponseEntity<Materiel> response = materielController.updateMateriel(idMateriel,
+                "Name", "2.0", "AA44");
+        // Assert :
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    /**
+     * Test the deleteMateriel method materiel was deleted successfully
+     */
+    @Test
+    public void testDeleteMaterielWhenMaterielWasDeleted() {
+        // Arrange :
         int idToDelete = 1;
-        Materiel materielToDelete = new Materiel("Test", "1.0", "123", 0);
-        when(materielService.getMaterielFromDB(idToDelete)).thenReturn(materielToDelete);
+        doNothing().when(materielService).deleteMateriel(idToDelete);
         // Act:
         ResponseEntity<Materiel> result = materielController.deleteMateriel(idToDelete);
-        // Verify the result message
+        // Assert :
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
+    }
+
+    /**
+     * Test the deleteMateriel method materiel was not deleted successfully
+     */
+    @Test
+    public void testDeleteMaterielWhenMaterielWasNotDeleted() {
+        // Arrange :
+        int idToDelete = 1;
+        doThrow(new EntityNotFoundException("Materiel not found")).when(materielService).deleteMateriel(idToDelete);
+        // Act :
+        ResponseEntity<Materiel> result = materielController.deleteMateriel(idToDelete);
+        // Assert :
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
     }
 }
