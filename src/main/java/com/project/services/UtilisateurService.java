@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.project.entities.Utilisateur;
 import com.project.repositories.UtilisateurRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class UtilisateurService {
     @Autowired
@@ -43,14 +45,13 @@ public class UtilisateurService {
             utilisateurExistant.setNom(utilisateurDetails.getNom());
             utilisateurExistant.setPrenom(utilisateurDetails.getPrenom());
             utilisateurExistant.setEmail(utilisateurDetails.getEmail());
-            utilisateurExistant.setPassword(utilisateurDetails.getPassword());  // Vérifiez l'orthographe correcte
+            utilisateurExistant.setPassword(utilisateurDetails.getPassword());  
             utilisateurExistant.setRole(utilisateurDetails.getRole());
 
             // Enregistrer les modifications
             return utilisateurRepository.save(utilisateurExistant);
         } else {
-            // Gérer le cas où l'utilisateur n'existe pas
-            // Par exemple, retourner null ou lever une exception personnalisée
+           
             return null;
         }
     }
@@ -59,6 +60,15 @@ public class UtilisateurService {
     public void supprimerUtilisateur(Long id) {
         utilisateurRepository.deleteById(id);
     }
+    public Utilisateur login(String email, String password) {
+        Optional<Utilisateur> utilisateur = utilisateurRepository.findByEmail(email);
+        if (utilisateur.isPresent() && utilisateur.get().getPassword().equals(password)) { //  comparer les hash des mots de passe dans une vraie application
+            return utilisateur.get();
+        }
+        throw new EntityNotFoundException("Informations de connexion incorrectes");
+    }
+
+    
 
 
 
