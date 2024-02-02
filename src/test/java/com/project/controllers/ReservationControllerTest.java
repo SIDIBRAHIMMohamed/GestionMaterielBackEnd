@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -42,6 +44,43 @@ public class ReservationControllerTest {
     @BeforeEach
     public void setUp() {
         // To set up any necessary configurations
+    }
+
+    /**
+     * Test getAllReservations when reservations exist
+     * @throws ParseException ParseException
+     */
+    @Test
+    public void testGetAllReservationsWhenReservationsExist() throws ParseException {
+        // Arrange :
+        Utilisateur utilisateur = new Utilisateur("John", "Doe", "john.doe@example.com", "password123", 1);
+        Materiel materiel = new Materiel("Test", "1.0", "123", 0);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        List<Reservation> reservations = List.of(new Reservation(dateFormat.parse("2022-02-01"),
+                dateFormat.parse("2022-02-10"), utilisateur, materiel));
+        when(reservationService.getAll()).thenReturn(reservations);
+        // Act :
+        ResponseEntity<List<Reservation>> response = reservationController.getAllReservations();
+        // Arrange :
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(reservations.size(), response.getBody().size());
+        for (int i = 0; i < reservations.size(); i++) {
+            assertEquals(reservations.get(i), response.getBody().get(i));
+        }
+    }
+
+    /**
+     * Test getAllReservations when reservations do not exist
+     */
+    @Test
+    public void testGetAllReservationsWhenReservationsDoNotExist() {
+        // Arrange :
+        when(reservationService.getAll()).thenReturn(Collections.emptyList());
+        // Act :
+        ResponseEntity<List<Reservation>> response = reservationController.getAllReservations();
+        // Assert :
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
     }
 
     /**

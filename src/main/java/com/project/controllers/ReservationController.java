@@ -12,12 +12,14 @@ import com.project.services.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,6 +40,22 @@ public class ReservationController {
         this.reservationService = reservationService;
         this.utilisateurService = utilisateurService;
         this.materielService = materielService;
+    }
+
+    /**
+     * Get all reservations
+     * @return ResponseEntity
+     */
+    @GetMapping("/reservations")
+    public ResponseEntity<List<Reservation>> getAllReservations() {
+        // Get reservations :
+        List<Reservation> reservations = reservationService.getAll();
+        // Check if list is empty :
+        if (reservations.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 
     /**

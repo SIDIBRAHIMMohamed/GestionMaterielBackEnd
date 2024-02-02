@@ -7,6 +7,7 @@ import com.project.entities.Reservation;
 import com.project.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class ReservationService {
@@ -20,6 +21,14 @@ public class ReservationService {
     @Autowired
     public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
+    }
+
+    /**
+     * Get all reservations
+     * @return List of reservations
+     */
+    public List<Reservation> getAll() {
+        return reservationRepository.findAll();
     }
 
     /**

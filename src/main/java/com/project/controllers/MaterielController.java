@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 public class MaterielController {
@@ -23,6 +24,22 @@ public class MaterielController {
     @Autowired
     public MaterielController(MaterielService materielService) {
         this.materielService = materielService;
+    }
+
+    /**
+     * Get All from materials
+     * @return ResponseEntity
+     */
+    @GetMapping("/materiels")
+    public ResponseEntity<List<Materiel>> getAllMateriels() {
+        // Get all materials :
+        List<Materiel> materiels = materielService.getAll();
+        // Check if list is empty :
+        if (materiels.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(materiels, HttpStatus.OK);
     }
 
     /**

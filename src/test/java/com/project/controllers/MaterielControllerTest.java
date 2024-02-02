@@ -13,6 +13,9 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Collections;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,6 +35,40 @@ public class MaterielControllerTest {
     @BeforeEach
     public void setUp() {
         // To set up any necessary configurations
+    }
+
+    /**
+     * Test the getAllMateriels method when materials exists
+     */
+    @Test
+    public void testGetAllMaterielsWhenMaterielsExists() {
+        // Arrange :
+        Materiel materiel1 = new Materiel("Test1", "1.0", "123", 0);
+        Materiel materiel2 = new Materiel("Test2", "2.0", "333", 0);
+        List<Materiel> materiels = List.of(materiel1, materiel2);
+        when(materielService.getAll()).thenReturn(materiels);
+        // Act :
+        ResponseEntity<List<Materiel>> result = materielController.getAllMateriels();
+        // Assert :
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(materiels.size(), result.getBody().size());
+        for (int i = 0; i < materiels.size(); i++) {
+            assertEquals(materiels.get(i), result.getBody().get(i));
+        }
+    }
+
+    /**
+     * Test the getAllMateriels method when materials does not exist
+     */
+    @Test
+    public void testGetAllMaterielsWhenMaterielsDoNotExist() {
+        // Arrange :
+        when(materielService.getAll()).thenReturn(Collections.emptyList());
+        // Act :
+        ResponseEntity<List<Materiel>> result = materielController.getAllMateriels();
+        // Assert :
+        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
+        assertNull(result.getBody());
     }
 
     /**

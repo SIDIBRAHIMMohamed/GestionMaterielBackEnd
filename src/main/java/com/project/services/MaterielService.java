@@ -7,6 +7,7 @@ import com.project.entities.Materiel;
 import com.project.repositories.MaterielRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class MaterielService {
@@ -20,6 +21,14 @@ public class MaterielService {
     @Autowired
     public MaterielService(MaterielRepository materielRepository) {
         this.materielRepository = materielRepository;
+    }
+
+    /**
+     * Get All from Materiel table
+     * @return List of Materiel
+     */
+    public List<Materiel> getAll() {
+        return materielRepository.findAll();
     }
 
     /**
