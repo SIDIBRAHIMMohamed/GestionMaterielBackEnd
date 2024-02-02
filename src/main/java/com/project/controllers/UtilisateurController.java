@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.dto.LoginRequest;
 import com.project.entities.Utilisateur;
 import com.project.services.UtilisateurService;
 
@@ -101,6 +102,19 @@ public class UtilisateurController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            Utilisateur utilisateur = utilisateurservice.login(loginRequest.getEmail(), loginRequest.getPassword());
+            return ResponseEntity.ok(utilisateur); // On  pout retourner un objet JWT 
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 
 

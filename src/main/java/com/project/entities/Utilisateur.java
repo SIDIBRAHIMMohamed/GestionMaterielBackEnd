@@ -1,5 +1,6 @@
 package com.project.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,15 +16,17 @@ public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @NotNull(message = "Le nom ne peut pas être nul")
     @Size(min = 2, message = "Le nom doit contenir au moins 2 caractères")
+    @Column(unique = true)
     private String nom;
 
     @NotNull(message = "Le prénom ne peut pas être nul")
     @Size(min = 2, message = "Le prénom doit contenir au moins 2 caractères")
     private String prenom;
     
+    @Column(unique = true)
     @NotNull()
     @Email(message = "L'email doit être valide")
     private String email;
