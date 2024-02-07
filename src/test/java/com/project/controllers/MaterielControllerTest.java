@@ -11,14 +11,17 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertNull;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -69,6 +72,45 @@ public class MaterielControllerTest {
         // Assert :
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
         assertNull(result.getBody());
+    }
+
+    /**
+     * Test the getAllMaterielsPagination method when materials exist
+     */
+    @Test
+    public void testGetAllMaterielsPaginationWhenMaterialsExist() {
+        // Arrange :
+        int page = 1;
+        int pageSize = 20;
+        // Create mock materials :
+        List<Materiel> mockMateriels = new ArrayList<>();
+        for (int i = 0; i < pageSize; i++) {
+            mockMateriels.add(new Materiel("Material" + i, "1.0", "TT" + i, 0));
+        }
+        when(materielService.getAll(any(Pageable.class))).thenReturn(new PageImpl<>(mockMateriels));
+        // Act :
+        ResponseEntity<List<Materiel>> response = materielController.getAllMaterielsPagination(page);
+        // Assert :
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        for (int i = 0; i < pageSize; i++) {
+            assertEquals(mockMateriels.get(i), response.getBody().get(i));
+        }
+    }
+
+    /**
+     * Test the getAllMaterielsPagination method when materials do not exist
+     */
+    @Test
+    public void testGetAllMaterielsPaginationWhenMaterialsDoNotExist() {
+        // Arrange :
+        int page = 1;
+        when(materielService.getAll(any(Pageable.class))).thenReturn(new PageImpl<>(Collections.emptyList()));
+        // Act :
+        ResponseEntity<List<Materiel>> response = materielController.getAllMaterielsPagination(page);
+        // Assert :
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
     }
 
     /**

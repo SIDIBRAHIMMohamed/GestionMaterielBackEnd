@@ -6,7 +6,9 @@ package com.project.services;
 import com.project.entities.Materiel;
 import com.project.repositories.MaterielRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Service
@@ -29,6 +31,15 @@ public class MaterielService {
      */
     public List<Materiel> getAll() {
         return materielRepository.findAll();
+    }
+
+    /**
+     * Get all materials with pagination
+     * @param pageable Pageable object specifying page number and size
+     * @return Page containing Materiel objects
+     */
+    public Page<Materiel> getAll(Pageable pageable) {
+        return materielRepository.findAll(pageable);
     }
 
     /**

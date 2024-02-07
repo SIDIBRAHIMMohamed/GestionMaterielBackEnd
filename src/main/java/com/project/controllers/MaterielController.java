@@ -7,9 +7,12 @@ import com.project.services.MaterielService;
 import com.project.entities.Materiel;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @RestController
@@ -40,6 +43,27 @@ public class MaterielController {
         }
 
         return new ResponseEntity<>(materiels, HttpStatus.OK);
+    }
+
+    /**
+     * Get All materials with pagination
+     * @param page page number
+     * @return ResponseEntity
+     */
+    @GetMapping("/pagination")
+    public ResponseEntity<List<Materiel>> getAllMaterielsPagination(@RequestParam(defaultValue = "1") int page) {
+        // Set number of materials to return :
+        int pageSize = 20;
+        // Create Pageable Object :
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        // Get materiels :
+        Page<Materiel> materielPage = materielService.getAll(pageable);
+        // Check if page is empty :
+        if (materielPage.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(materielPage.getContent(), HttpStatus.OK);
     }
 
     /**
