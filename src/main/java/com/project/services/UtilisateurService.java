@@ -12,6 +12,8 @@ import com.project.entities.Utilisateur;
 import com.project.repositories.UtilisateurRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class UtilisateurService {
@@ -66,6 +68,11 @@ public class UtilisateurService {
             return utilisateur.get();
         }
         throw new EntityNotFoundException("Informations de connexion incorrectes");
+    }
+    
+    
+    public Page<Utilisateur> getUtilisateursPaginated(Pageable pageable) {
+        return utilisateurRepository.findAll(pageable);
     }
 
     
