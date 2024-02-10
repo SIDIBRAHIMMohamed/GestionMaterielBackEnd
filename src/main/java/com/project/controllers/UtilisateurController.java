@@ -1,6 +1,8 @@
 package com.project.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +145,38 @@ public class UtilisateurController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    
+    
+    @GetMapping("/paginatedUsers")
+    public ResponseEntity<Map<String, Object>> getAllUtilisateursPagination(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            // Création de l'objet Pageable
+            Pageable pageable = PageRequest.of(page - 1, size);
+            Page<Utilisateur> utilisateurPage = utilisateurservice.getUtilisateursPaginated(pageable);
+
+            // Vérification si la page est vide
+            if (utilisateurPage.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("users", utilisateurPage.getContent());
+            response.put("currentPage", utilisateurPage.getNumber() + 1);
+            response.put("totalItems", utilisateurPage.getTotalElements());
+            response.put("totalPages", utilisateurPage.getTotalPages());
+            response.put("next", utilisateurPage.hasNext());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
+
 
 
 

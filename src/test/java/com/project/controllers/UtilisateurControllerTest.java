@@ -41,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 
@@ -290,41 +291,69 @@ public class UtilisateurControllerTest {
                 .andExpect(status().isInternalServerError());
     }
     
+  
+    
+    
     @Test
-    public void getUtilisateursPaginated_WithUsers_ShouldReturnUsersList() throws Exception {
-        List<Utilisateur> users = Arrays.asList(new Utilisateur("User1", "Last1", "user1@example.com", "pass1", 0),
-                                                new Utilisateur("User2", "Last2", "user2@example.com", "pass2", 0));
-        Page<Utilisateur> page = new PageImpl<>(users);
+    public void getAllUtilisateursPagination_WhenUsersExist_ShouldReturnPaginatedUsers() throws Exception {
+        int page = 1;
+        int size = 2;
+        Pageable pageable = PageRequest.of(page - 1, size);
 
-        when(utilisateurService.getUtilisateursPaginated(any(Pageable.class))).thenReturn(page);
+        Utilisateur user1 = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0);
+        Utilisateur user2 = new Utilisateur("Tah", "DIDI", "tah@gmail.com", "password", 0);
+        List<Utilisateur> userList = Arrays.asList(user1, user2);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/utilisateurs/paginated?page=0&size=2")
+        Page<Utilisateur> userPage = new PageImpl<>(userList, pageable, userList.size());
+
+        when(utilisateurService.getUtilisateursPaginated(pageable)).thenReturn(userPage);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/paginatedUsers")
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].email", is(users.get(0).getEmail())))
-                .andExpect(jsonPath("$[1].email", is(users.get(1).getEmail())));
+                .andExpect(jsonPath("$.users", hasSize(2)))
+                .andExpect(jsonPath("$.users[0].nom", is(user1.getNom())))
+                .andExpect(jsonPath("$.users[1].nom", is(user2.getNom())))
+                .andExpect(jsonPath("$.totalItems", is(userList.size())))
+                .andExpect(jsonPath("$.totalPages", is(1)))
+                .andExpect(jsonPath("$.next", is(false)));
     }
 
     @Test
-    public void getUtilisateursPaginated_WithoutUsers_ShouldReturnNoContent() throws Exception {
-        Page<Utilisateur> page = Page.empty();
+    public void getAllUtilisateursPagination_WhenNoUsers_ShouldReturnNoContent() throws Exception {
+        int page = 1;
+        int size = 2;
+        Pageable pageable = PageRequest.of(page - 1, size);
 
-        when(utilisateurService.getUtilisateursPaginated(any(Pageable.class))).thenReturn(page);
+        Page<Utilisateur> userPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/utilisateurs/paginated?page=0&size=2")
+        when(utilisateurService.getUtilisateursPaginated(pageable)).thenReturn(userPage);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/paginatedUsers")
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
-
     @Test
-    public void getUtilisateursPaginated_WithServerError_ShouldReturnInternalServerError() throws Exception {
-        when(utilisateurService.getUtilisateursPaginated(any(Pageable.class))).thenThrow(new RuntimeException());
+    public void getAllUtilisateursPagination_WhenServerError_ShouldReturnInternalServerError() throws Exception {
+        int page = 1;
+        int size = 2;
+        Pageable pageable = PageRequest.of(page - 1, size);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/utilisateurs/paginated?page=0&size=2")
+        
+        when(utilisateurService.getUtilisateursPaginated(pageable)).thenThrow(new RuntimeException("Internal server error"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/paginatedUsers")
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
     }
+
+
 
 
 
