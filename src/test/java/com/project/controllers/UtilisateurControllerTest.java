@@ -1,6 +1,10 @@
 package com.project.controllers;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.mockito.ArgumentMatchers.anyString;
+
+
 import static org.mockito.Mockito.doThrow;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.dto.LoginRequest;
 import com.project.entities.Utilisateur;
 import com.project.services.UtilisateurService;
 
@@ -33,6 +38,11 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
 
 
 @WebMvcTest(UtilisateurController.class)
@@ -174,7 +184,7 @@ public class UtilisateurControllerTest {
         when(utilisateurService.modifierUtilisateur(eq(1L), any(Utilisateur.class))).thenReturn(null);
 
         // Créer un objet Utilisateur avec des données valides
-        Utilisateur validUser = new Utilisateur("John", "Doe", "john.doe@example.com", "password123", 0);
+        Utilisateur validUser = new Utilisateur("Mohamed", "SID BRAHIM", "Mohamed.sidbrahim@example.com", "password123", 0);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/utilisateurs/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -238,10 +248,85 @@ public class UtilisateurControllerTest {
     }
 
     
-    
+    @Test
+    public void login_WithValidCredentials_ShouldReturnUser() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("valid.user@example.com", "password");
+        Utilisateur user = new Utilisateur("ValidUser", "LastName", "valid.user@example.com", "password", 0);
 
+        when(utilisateurService.login(loginRequest.getEmail(), loginRequest.getPassword())).thenReturn(user);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(loginRequest)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email", is(user.getEmail())));
+
+    }
+
+
+    @Test
+    public void login_WithInvalidCredentials_ShouldReturnUnauthorized() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("invalid.user@example.com", "wrongpassword");
+
+        when(utilisateurService.login(loginRequest.getEmail(), loginRequest.getPassword())).thenThrow(new EntityNotFoundException("User not found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(loginRequest)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void login_WithServerError_ShouldReturnInternalServerError() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("user@example.com", "password");
+
+       
+        when(utilisateurService.login(anyString(), anyString())).thenThrow(new RuntimeException());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(loginRequest)))
+                .andExpect(status().isInternalServerError());
+    }
     
-    
+    @Test
+    public void getUtilisateursPaginated_WithUsers_ShouldReturnUsersList() throws Exception {
+        List<Utilisateur> users = Arrays.asList(new Utilisateur("User1", "Last1", "user1@example.com", "pass1", 0),
+                                                new Utilisateur("User2", "Last2", "user2@example.com", "pass2", 0));
+        Page<Utilisateur> page = new PageImpl<>(users);
+
+        when(utilisateurService.getUtilisateursPaginated(any(Pageable.class))).thenReturn(page);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/utilisateurs/paginated?page=0&size=2")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].email", is(users.get(0).getEmail())))
+                .andExpect(jsonPath("$[1].email", is(users.get(1).getEmail())));
+    }
+
+    @Test
+    public void getUtilisateursPaginated_WithoutUsers_ShouldReturnNoContent() throws Exception {
+        Page<Utilisateur> page = Page.empty();
+
+        when(utilisateurService.getUtilisateursPaginated(any(Pageable.class))).thenReturn(page);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/utilisateurs/paginated?page=0&size=2")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void getUtilisateursPaginated_WithServerError_ShouldReturnInternalServerError() throws Exception {
+        when(utilisateurService.getUtilisateursPaginated(any(Pageable.class))).thenThrow(new RuntimeException());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/utilisateurs/paginated?page=0&size=2")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+
 
 
 

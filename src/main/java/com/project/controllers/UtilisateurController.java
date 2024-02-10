@@ -93,7 +93,7 @@ public class UtilisateurController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            // Vous pouvez logger l'exception ici si nécessaire
+            
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -125,7 +125,7 @@ public class UtilisateurController {
     }
 
 
-    //http://localhost:9090/api/utilisateurs/paginated?page=0&size=8  :exemple
+    //http://localhost:9090/api/utilisateurs/paginated?page=0&size=8  :premier page avec 8 utilisateurs
     @GetMapping("/utilisateurs/paginated")
     public ResponseEntity<List<Utilisateur>> getUtilisateursPaginated(
             @RequestParam(value = "page", defaultValue = "0") int page,
