@@ -127,27 +127,9 @@ public class UtilisateurController {
     }
 
 
-    //http://localhost:9090/api/utilisateurs/paginated?page=0&size=8  :premier page avec 8 utilisateurs
-    @GetMapping("/utilisateurs/paginated")
-    public ResponseEntity<List<Utilisateur>> getUtilisateursPaginated(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-        try {
-            Pageable paging = PageRequest.of(page, size);
-            Page<Utilisateur> pageUtilisateurs = utilisateurservice.getUtilisateursPaginated(paging);
-            List<Utilisateur> utilisateurs = pageUtilisateurs.getContent();
-
-            if (utilisateurs.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(utilisateurs, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+   
     
-    
-    
+    //exmple :http://localhost:9090/api/paginatedUsers?page=1&size=2
     @GetMapping("/paginatedUsers")
     public ResponseEntity<Map<String, Object>> getAllUtilisateursPagination(
             @RequestParam(defaultValue = "1") int page,
