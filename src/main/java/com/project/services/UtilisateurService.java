@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.project.entities.Utilisateur;
 import com.project.repositories.UtilisateurRepository;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class UtilisateurService {
@@ -67,7 +70,22 @@ public class UtilisateurService {
         }
         throw new EntityNotFoundException("Informations de connexion incorrectes");
     }
-
+    
+    
+    public Page<Utilisateur> getUtilisateursPaginated(Pageable pageable) {
+        return utilisateurRepository.findAll(pageable);
+    }
+    /*
+    @PostConstruct
+    public void initAdminUser() {
+        Optional<Utilisateur> adminUser = utilisateurRepository.findByEmail("admin@example.com");
+        if (adminUser.isEmpty()) {
+            Utilisateur admin = new Utilisateur("Admin", "Admin", "admin@example.com", "password", 1);
+            // On peux hasher le mot de passe
+            utilisateurRepository.save(admin);
+        }
+    }
+*/
     
 
 

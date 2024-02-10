@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.LoginRequest;
@@ -22,6 +23,13 @@ import com.project.services.UtilisateurService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
@@ -36,6 +44,7 @@ public class UtilisateurController {
     public ResponseEntity<List<Utilisateur>> getAllUtilisateurs() {
         try {
             List<Utilisateur> utilisateurs = utilisateurservice.listerUtilisateurs();
+            
 
             if (utilisateurs.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -84,7 +93,7 @@ public class UtilisateurController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            // Vous pouvez logger l'exception ici si nécessaire
+            
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -116,7 +125,24 @@ public class UtilisateurController {
     }
 
 
+    //http://localhost:9090/api/utilisateurs/paginated?page=0&size=8  :premier page avec 8 utilisateurs
+    @GetMapping("/utilisateurs/paginated")
+    public ResponseEntity<List<Utilisateur>> getUtilisateursPaginated(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            Page<Utilisateur> pageUtilisateurs = utilisateurservice.getUtilisateursPaginated(paging);
+            List<Utilisateur> utilisateurs = pageUtilisateurs.getContent();
 
+            if (utilisateurs.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(utilisateurs, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 
