@@ -176,7 +176,7 @@ public class MaterielControllerTest {
     }
 
     /**
-     * Test updateMateriel method when materiel was updated successfully
+     * Test updateMateriel method when materiel exist and data is valid
      */
     @Test
     public void testUpdateMaterielWhenMaterielWasUpdated() {
@@ -239,10 +239,10 @@ public class MaterielControllerTest {
     }
 
     /**
-     * Test the deleteMateriel method materiel was deleted successfully
+     * Test the deleteMateriel method when materiel exist
      */
     @Test
-    public void testDeleteMaterielWhenMaterielWasDeleted() {
+    public void testDeleteMaterielWhenMaterielExist() {
         // Arrange :
         int idToDelete = 1;
         doNothing().when(materielService).deleteMateriel(idToDelete);
@@ -253,10 +253,10 @@ public class MaterielControllerTest {
     }
 
     /**
-     * Test the deleteMateriel method materiel was not deleted successfully
+     * Test the deleteMateriel method when materiel do not exist
      */
     @Test
-    public void testDeleteMaterielWhenMaterielWasNotDeleted() {
+    public void testDeleteMaterielWhenMaterielDoNotExist() {
         // Arrange :
         int idToDelete = 1;
         doThrow(new EntityNotFoundException("Materiel not found")).when(materielService).deleteMateriel(idToDelete);
