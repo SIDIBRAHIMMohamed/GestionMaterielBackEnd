@@ -145,10 +145,10 @@ public class MaterielControllerTest {
     }
 
     /**
-     * Test the addMateriel method when materiel has been added successfully
+     * Test the addMateriel method with valid data
      */
     @Test
-    public void testAddMaterielWhenMaterielAdded() {
+    public void testAddMaterielWithValidData() {
         // Arrange :
         String nom = "Test";
         String version = "1.0";
@@ -164,10 +164,10 @@ public class MaterielControllerTest {
     }
 
     /**
-     * Test the addMateriel method when materiel has not been added successfully
+     * Test the addMateriel method with invalid data
      */
     @Test
-    public void testAddMaterielWhenMaterielWasNotAdded() {
+    public void testAddMaterielWithInvalidData() {
         //Act :
         ResponseEntity<Materiel> response = materielController.addMateriel("", "2.0", "dd44");
         // Assert :
@@ -203,10 +203,10 @@ public class MaterielControllerTest {
     }
 
     /**
-     * Test updateMateriel method when materiel was not updated successfully
+     * Test updateMateriel method when materiel do not exist
      */
     @Test
-    public void testUpdateMaterielWhenMaterielWasNotUpdated() {
+    public void testUpdateMaterielWhenMaterielDoNotExist() {
         // Arrange :
         int idMateriel = 1;
         when(materielService.getMaterielFromDB(idMateriel)).thenReturn(null);
@@ -216,6 +216,26 @@ public class MaterielControllerTest {
         // Assert :
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
+    }
+
+    /**
+     * Test updateMateriel method with invalid data
+     */
+    @Test
+    public void testUpdateMaterielWithInvalidData() {
+        // Arrange:
+        int idToUpdate = 1;
+        String newNom = "";
+        String newVersion = "2.0";
+        String newRef = "444";
+        Materiel existingMateriel = new Materiel("Existing", "1.0", "123", 1);
+        // When calling getMaterielFromDB with idToUpdate, return the existingMateriel
+        when(materielService.getMaterielFromDB(idToUpdate)).thenReturn(existingMateriel);
+        // Act:
+        ResponseEntity<Materiel> result = materielController.updateMateriel(idToUpdate, newNom, newVersion, newRef);
+        // Assert:
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+        assertNull(result.getBody());
     }
 
     /**
