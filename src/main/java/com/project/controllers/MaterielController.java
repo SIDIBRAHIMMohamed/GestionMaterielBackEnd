@@ -143,12 +143,16 @@ public ResponseEntity<Map<String, Object>> getAllMaterielsPagination2(@RequestPa
         Materiel materiel = materielService.getMaterielFromDB(idMateriel);
         // If materiel was found :
         if (materiel != null) {
-            // Update values :
-            materiel.setNom(nom);
-            materiel.setVersion(version);
-            materiel.setRef(ref);
-            // Save :
-            return new ResponseEntity<>(materielService.saveMateriel(materiel), HttpStatus.OK);
+            // Check if data is valid :
+            if (!nom.isEmpty() && !version.isEmpty() && !ref.isEmpty()) {
+                // Update values :
+                materiel.setNom(nom);
+                materiel.setVersion(version);
+                materiel.setRef(ref);
+                // Save :
+                return new ResponseEntity<>(materielService.saveMateriel(materiel), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
