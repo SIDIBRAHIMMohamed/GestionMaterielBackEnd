@@ -134,6 +134,7 @@ public ResponseEntity<Map<String, Object>> getAllMaterielsPagination2(@RequestPa
      * @param nom nom
      * @param version version
      * @param ref ref
+     * @param status status
      * @return ResponseEntity
      */
     @PutMapping("/update/{idMateriel}")
@@ -149,6 +150,33 @@ public ResponseEntity<Map<String, Object>> getAllMaterielsPagination2(@RequestPa
                 materiel.setNom(nom);
                 materiel.setVersion(version);
                 materiel.setRef(ref);
+
+                // Save :
+                return new ResponseEntity<>(materielService.saveMateriel(materiel), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+        /**
+     * Update materiel
+     * @param idMateriel id
+     * @param status status
+     * @return ResponseEntity
+     */
+    @PutMapping("/updatestatus/{idMateriel}")
+    public ResponseEntity<Materiel> updateMaterielStatus(@PathVariable int idMateriel, @RequestParam int status) {
+        // Get materiel :
+        Materiel materiel = materielService.getMaterielFromDB(idMateriel);
+        // If materiel was found :
+        if (materiel != null) {
+            // Check if data is valid :
+            if (status != materiel.getStatus()) {
+                // Update values :
+                materiel.setStatus(status);
+
                 // Save :
                 return new ResponseEntity<>(materielService.saveMateriel(materiel), HttpStatus.OK);
             }

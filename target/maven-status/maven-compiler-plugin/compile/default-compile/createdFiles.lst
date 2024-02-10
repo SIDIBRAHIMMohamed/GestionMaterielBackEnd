@@ -1,5 +1,5 @@
-com/project/controllers/ReservationController.class
 com/project/services/ReservationService.class
+com/project/controllers/ReservationController.class
 com/project/repositories/UtilisateurRepository.class
 com/project/controllers/MaterielController.class
 com/project/controllers/UtilisateurController.class
