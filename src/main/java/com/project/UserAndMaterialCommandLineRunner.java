@@ -38,7 +38,7 @@ public class UserAndMaterialCommandLineRunner implements CommandLineRunner{
                 return;
             }
 
-            Utilisateur admin = new Utilisateur("admin", "admin", "admin.admin@univ-tours.fr", "admin-password", 1);
+            Utilisateur admin = new Utilisateur("admin", "admin", "admin.admin@univ-tours.fr", "admin-password", 0);
             userRepository.save(admin);
             // create three users with role 0 give them names
             Utilisateur user1 = new Utilisateur("John", "Jack","jack.john@entreprise.fr","John123", 0);
@@ -56,14 +56,36 @@ public class UserAndMaterialCommandLineRunner implements CommandLineRunner{
             List<Materiel> materials = new ArrayList<>();
 
             // Add different tech items
-            materials.add(new Materiel("Laptop", "Windows 10", "LAP-01", 1));
-            materials.add(new Materiel("Laptop", "MacOS", "LAP-02", 1));
-            materials.add(new Materiel("PC", "Windows 10", "PC-01", 1));
-            materials.add(new Materiel("PC", "Linux", "PC-02", 1));
-            materials.add(new Materiel("Phone", "Android", "PHN-01", 1));
-            materials.add(new Materiel("Phone", "iOS", "PHN-02", 1));
-            materials.add(new Materiel("Tablet", "Android", "TAB-01", 1));
-            materials.add(new Materiel("Tablet", "iOS", "TAB-02", 1));
+            materials.add(new Materiel("Laptop", "Windows 10", "LAP-01", 0));
+            materials.add(new Materiel("Laptop", "MacOS", "LAP-02", 0));
+            materials.add(new Materiel("PC", "Windows 10", "PC-01", 0));
+            materials.add(new Materiel("PC", "Linux", "PC-02", 0));
+            materials.add(new Materiel("Phone", "Android", "PHN-01", 0));
+            materials.add(new Materiel("Phone", "iOS", "PHN-02", 0));
+            materials.add(new Materiel("Tablet", "Android", "TAB-01", 0));
+            materials.add(new Materiel("Tablet", "iOS", "TAB-02", 0));
+
+
+            materials.add(new Materiel("Monitor", "4K", "MON-01", 0));
+            materials.add(new Materiel("Monitor", "1080p", "MON-02", 0));
+            materials.add(new Materiel("Keyboard", "Mechanical", "KEY-01", 0));
+            materials.add(new Materiel("Keyboard", "Membrane", "KEY-02", 0));
+            materials.add(new Materiel("Mouse", "Wireless", "MOU-01", 0));
+            materials.add(new Materiel("Mouse", "Wired", "MOU-02", 0));
+            materials.add(new Materiel("Printer", "Laser", "PRI-01", 0));
+            materials.add(new Materiel("Printer", "Inkjet", "PRI-02", 0));
+            materials.add(new Materiel("Scanner", "Flatbed", "SCA-01", 0));
+            materials.add(new Materiel("Scanner", "Sheet-fed", "SCA-02", 0));
+            materials.add(new Materiel("Webcam", "1080p", "WEB-01", 0));
+            materials.add(new Materiel("Webcam", "720p", "WEB-02", 0));
+            materials.add(new Materiel("Speaker", "Stereo", "SPE-01", 0));
+            materials.add(new Materiel("Speaker", "Mono", "SPE-02", 0));
+            materials.add(new Materiel("Router", "Wireless", "ROU-01", 0));
+            materials.add(new Materiel("Router", "Wired", "ROU-02", 0));
+            materials.add(new Materiel("Modem", "DSL", "MOD-01", 0));
+            materials.add(new Materiel("Modem", "Cable", "MOD-02", 0));
+            materials.add(new Materiel("Projector", "4K", "PRO-01", 0));
+            materials.add(new Materiel("Projector", "1080p", "PRO-02", 0));
 
             // Save all materials to the repository
             for (Materiel material : materials) {

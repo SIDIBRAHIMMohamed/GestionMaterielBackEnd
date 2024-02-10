@@ -13,7 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @CrossOrigin(origins = "*")
@@ -55,7 +58,7 @@ public class MaterielController {
     @GetMapping("/pagination")
     public ResponseEntity<List<Materiel>> getAllMaterielsPagination(@RequestParam(defaultValue = "1") int page) {
         // Set number of materials to return :
-        int pageSize = 20;
+        int pageSize = 10;
         // Create Pageable Object :
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         // Get materiels :
@@ -67,6 +70,26 @@ public class MaterielController {
 
         return new ResponseEntity<>(materielPage.getContent(), HttpStatus.OK);
     }
+
+    @GetMapping("/paginatedMaterials")
+public ResponseEntity<Map<String, Object>> getAllMaterielsPagination2(@RequestParam(defaultValue = "1") int page) {
+    // Set number of materials to return :
+    int pageSize = 10;
+    // Create Pageable Object :
+    Pageable pageable = PageRequest.of(page - 1, pageSize);
+    // Get materiels :
+    Page<Materiel> materielPage = materielService.getAll(pageable);
+    // Check if page is empty :
+    if (materielPage.isEmpty()) {
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("materials", materielPage.getContent());
+    response.put("next", materielPage.hasNext());
+
+    return new ResponseEntity<>(response, HttpStatus.OK);
+}
 
     /**
      * Get a Materiel
