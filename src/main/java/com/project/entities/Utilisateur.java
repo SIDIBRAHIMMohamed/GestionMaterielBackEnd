@@ -31,7 +31,7 @@ public class Utilisateur {
     @NotNull()
     @Email(message = "L'email doit être valide")
     private String email;
-    @JsonIgnore
+    //@JsonIgnore
     @NotNull (message = "Le mot de passe doit pas est null")
     @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
     private String password;

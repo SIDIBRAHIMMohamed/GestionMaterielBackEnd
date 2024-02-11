@@ -52,13 +52,18 @@ public class UtilisateurService {
             utilisateurExistant.setNom(utilisateurDetails.getNom());
             utilisateurExistant.setPrenom(utilisateurDetails.getPrenom());
             utilisateurExistant.setEmail(utilisateurDetails.getEmail());
-            utilisateurExistant.setPassword(utilisateurDetails.getPassword());  
+
+            // Encoder le nouveau mot de passe si présent
+            if (utilisateurDetails.getPassword() != null) {
+                String passwordEncoded = passwordEncoder.encode(utilisateurDetails.getPassword());
+                utilisateurExistant.setPassword(passwordEncoded);
+            }
+
             utilisateurExistant.setRole(utilisateurDetails.getRole());
 
             // Enregistrer les modifications
             return utilisateurRepository.save(utilisateurExistant);
         } else {
-           
             return null;
         }
     }
