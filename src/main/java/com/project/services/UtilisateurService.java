@@ -79,17 +79,7 @@ public class UtilisateurService {
     public Page<Utilisateur> getUtilisateursPaginated(Pageable pageable) {
         return utilisateurRepository.findAll(pageable);
     }
-    /*
-    @PostConstruct
-    public void initAdminUser() {
-        Optional<Utilisateur> adminUser = utilisateurRepository.findByEmail("admin@example.com");
-        if (adminUser.isEmpty()) {
-            Utilisateur admin = new Utilisateur("Admin", "Admin", "admin@example.com", "password", 1);
-            // On peux hasher le mot de passe
-            utilisateurRepository.save(admin);
-        }
-    }
-*/
+    
     
 
 

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -55,6 +56,8 @@ public class UtilisateurControllerTest {
 
     @MockBean
     private UtilisateurService utilisateurService;
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     @Test
     public void getAllUtilisateurs_WhenUsersExist_ShouldReturnUsers() throws Exception {
@@ -254,7 +257,8 @@ public class UtilisateurControllerTest {
     public void login_WithValidCredentials_ShouldReturnUser() throws Exception {
         LoginRequest loginRequest = new LoginRequest("valid.user@example.com", "password");
         Utilisateur user = new Utilisateur("ValidUser", "LastName", "valid.user@example.com", "password", 0);
-
+        
+        
         when(utilisateurService.login(loginRequest.getEmail(), loginRequest.getPassword())).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
