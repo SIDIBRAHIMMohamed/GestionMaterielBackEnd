@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.dto.EmailRequest;
 import com.project.dto.LoginRequest;
 import com.project.dto.LoginResponse;
+import com.project.dto.UserWithoutHasloginIn;
 import com.project.entities.Utilisateur;
 import com.project.services.UtilisateurService;
 
@@ -78,10 +79,12 @@ public class UtilisateurController {
 
 
     @PostMapping("/utilisateurs")
-    public ResponseEntity<Utilisateur> createUtilisateur(@RequestBody Utilisateur utilisateur) {
+    public ResponseEntity<?> createUtilisateur(@RequestBody UserWithoutHasloginIn userwithoutHasloginIn) {
         try {
+        	Utilisateur utilisateur = new Utilisateur(userwithoutHasloginIn.getNom(),userwithoutHasloginIn.getPrenom(),userwithoutHasloginIn.getEmail(),userwithoutHasloginIn.getPassword(),userwithoutHasloginIn.getRole(),false);
             Utilisateur nouvelUtilisateur = utilisateurservice.creerUtilisateur(utilisateur);
-            return new ResponseEntity<>(nouvelUtilisateur, HttpStatus.CREATED);
+            LoginResponse response = utilisateurservice.mapToLoginResponse(nouvelUtilisateur);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

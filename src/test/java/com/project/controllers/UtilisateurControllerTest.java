@@ -10,17 +10,18 @@ import static org.mockito.Mockito.doThrow;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
-import javax.validation.ConstraintViolationException;
+
 
 
 import static org.mockito.Mockito.when;
@@ -44,7 +45,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
 
 
 @WebMvcTest(UtilisateurController.class)
@@ -254,11 +254,13 @@ public class UtilisateurControllerTest {
 
     
     @Test
-    public void login_WithValidCredentials_ShouldReturnUser() throws Exception {
+    public void login_WithValidCredentials_ShouldReturnLoginResponse() throws Exception {
         LoginRequest loginRequest = new LoginRequest("valid.user@example.com", "password");
-        Utilisateur user = new Utilisateur("ValidUser", "LastName", "valid.user@example.com", "password", 0,false);
-        
-        
+        Utilisateur user = new Utilisateur("ValidUser", "ValidLastName", "valid.user@example.com", "password", 0, true);
+
+        // Afficher l'utilisateur créé pour le test
+        System.out.println("Utilisateur de test : " + user);
+
         when(utilisateurService.login(loginRequest.getEmail(), loginRequest.getPassword())).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
@@ -266,9 +268,17 @@ public class UtilisateurControllerTest {
                 .content(new ObjectMapper().writeValueAsString(loginRequest)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", is(user.getEmail())));
-
+                .andExpect(jsonPath("$.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.nom", is(user.getNom())))
+                .andExpect(jsonPath("$.prenom", is(user.getPrenom())))
+                .andExpect(jsonPath("$.role", is(user.getRole())))
+                .andExpect(jsonPath("$.haslogiIn", is(true)))
+                .andExpect(jsonPath("$.password").doesNotExist()); // Vérifie que le mot de passe n'est pas renvoyé
     }
+
+
+
+
 
 
     @Test

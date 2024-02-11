@@ -25,6 +25,7 @@ public class UtilisateurService {
     public Utilisateur creerUtilisateur(Utilisateur utilisateur) {
     	String passwordcoder = passwordEncoder.encode(utilisateur.getPassword());
     	utilisateur.setPassword(passwordcoder);
+    	utilisateur.setHasloginIn(false);
         return utilisateurRepository.save(utilisateur);
     }
 
