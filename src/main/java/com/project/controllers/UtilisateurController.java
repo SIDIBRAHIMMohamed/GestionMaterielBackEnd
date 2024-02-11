@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.EmailRequest;
 import com.project.dto.LoginRequest;
+import com.project.dto.LoginResponse;
 import com.project.entities.Utilisateur;
 import com.project.services.UtilisateurService;
 
@@ -119,9 +120,9 @@ public class UtilisateurController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-        	
             Utilisateur utilisateur = utilisateurservice.login(loginRequest.getEmail(), loginRequest.getPassword());
-            return ResponseEntity.ok(utilisateur); 
+            LoginResponse response = utilisateurservice.mapToLoginResponse(utilisateur);
+            return ResponseEntity.ok(response);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {

@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.project.dto.LoginResponse;
 import com.project.entities.Utilisateur;
 import com.project.repositories.UtilisateurRepository;
 
@@ -113,6 +113,18 @@ public class UtilisateurService {
             // Gérer le cas où l'utilisateur n'est pas trouvé
             throw new RuntimeException("Utilisateur introuvable avec l'email : " + email);
         }
+    }
+    
+    public LoginResponse mapToLoginResponse(Utilisateur utilisateur) {
+        LoginResponse response = new LoginResponse();
+        response.setId(utilisateur.getId());
+        response.setNom(utilisateur.getNom());
+        response.setPrenom(utilisateur.getPrenom());
+        response.setEmail(utilisateur.getEmail());
+        response.setRole(utilisateur.getRole());
+        response.setHaslogiIn(utilisateur.isHasloginIn());
+        
+        return response;
     }
 
 
