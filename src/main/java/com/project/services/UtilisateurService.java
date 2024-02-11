@@ -107,8 +107,9 @@ public class UtilisateurService {
         if (utilisateurOptional.isPresent()) {
             Utilisateur utilisateur = utilisateurOptional.get();
             // Réinitialiser le mot de passe à "123456"
-            String motDePasseEncode = passwordEncoder.encode("123456");
+            String motDePasseEncode = passwordEncoder.encode("12345678");
             utilisateur.setPassword(motDePasseEncode);
+            utilisateur.setHasloginIn(false);
             utilisateurRepository.save(utilisateur);
         } else {
             // Gérer le cas où l'utilisateur n'est pas trouvé
