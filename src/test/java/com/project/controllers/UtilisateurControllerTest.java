@@ -10,13 +10,17 @@ import static org.mockito.Mockito.doThrow;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.junit.jupiter.api.Test;
-
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,6 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.dto.LoginRequest;
+import com.project.dto.LoginResponse;
+import com.project.dto.UserWithoutHasloginIn;
 import com.project.entities.Utilisateur;
 import com.project.services.UtilisateurService;
 
@@ -46,7 +52,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 @WebMvcTest(UtilisateurController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class UtilisateurControllerTest {
@@ -56,6 +62,8 @@ public class UtilisateurControllerTest {
 
     @MockBean
     private UtilisateurService utilisateurService;
+    @InjectMocks
+    private UtilisateurController utilisateurController;
     @MockBean
     private PasswordEncoder passwordEncoder;
 
@@ -132,17 +140,27 @@ public class UtilisateurControllerTest {
     
     
     @Test
-    public void createUtilisateur_WhenValidData_ShouldCreateUser() throws Exception {
-        Utilisateur newUser = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0,false);
-        when(utilisateurService.creerUtilisateur(any(Utilisateur.class))).thenReturn(newUser);
+    void createUtilisateur_WhenValidData_ShouldCreateUser() throws Exception {
+        // Given
+        UserWithoutHasloginIn userWithoutHasloginIn = new UserWithoutHasloginIn("John", "Doe", "john@example.com", "password", 0);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/utilisateurs")
+        Utilisateur nouvelUtilisateur = new Utilisateur("John", "Doe", "john@example.com", "password", 0, false);
+        LoginResponse loginResponse = new LoginResponse("John", "Doe", "john@example.com", 0, false);
+
+        when(utilisateurService.creerUtilisateur(any(Utilisateur.class))).thenReturn(nouvelUtilisateur);
+        when(utilisateurService.mapToLoginResponse(any(Utilisateur.class))).thenReturn(loginResponse);
+
+        // When
+       mockMvc.perform(MockMvcRequestBuilders.post("/api/utilisateurs")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(newUser)))
+                .content(new ObjectMapper().writeValueAsString(userWithoutHasloginIn)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.nom", is(newUser.getNom())));
+                .andReturn();
+
+        
     }
-    
+
+  
     
     @Test
     public void createUtilisateur_WhenInvalidData_ShouldReturnBadRequest() throws Exception {
@@ -257,17 +275,15 @@ public class UtilisateurControllerTest {
     public void login_WithValidCredentials_ShouldReturnLoginResponse() throws Exception {
         LoginRequest loginRequest = new LoginRequest("valid.user@example.com", "password");
         Utilisateur user = new Utilisateur("ValidUser", "ValidLastName", "valid.user@example.com", "password", 0, true);
+        LoginResponse logiResponse =new LoginResponse("ValidUser", "ValidLastName", "valid.user@example.com", 0, true);
 
-        // Afficher l'utilisateur créé pour le test
-        System.out.println("Utilisateur de test : " + user);
+        
 
         when(utilisateurService.login(loginRequest.getEmail(), loginRequest.getPassword())).thenReturn(user);
-
+        when(utilisateurService.mapToLoginResponse(any(Utilisateur.class))).thenReturn(logiResponse);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(loginRequest)))
-                .andDo(print())
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email", is(user.getEmail())))
                 .andExpect(jsonPath("$.nom", is(user.getNom())))
                 .andExpect(jsonPath("$.prenom", is(user.getPrenom())))

@@ -119,7 +119,6 @@ public class UtilisateurService {
     
     public LoginResponse mapToLoginResponse(Utilisateur utilisateur) {
         LoginResponse response = new LoginResponse();
-        response.setId(utilisateur.getId());
         response.setNom(utilisateur.getNom());
         response.setPrenom(utilisateur.getPrenom());
         response.setEmail(utilisateur.getEmail());

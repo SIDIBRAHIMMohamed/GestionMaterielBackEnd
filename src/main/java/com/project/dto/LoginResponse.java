@@ -1,19 +1,26 @@
 package com.project.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
+import lombok.Data;
+
+
+
+@Data
 public class LoginResponse {
-	private Long id;
+
     private String nom;
     private String prenom;
     private String email;
     private int role;
     private boolean haslogiIn;
     public LoginResponse() {}
+	public LoginResponse(String nom, String prenom, String email, int role, boolean haslogiIn) {
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.role = role;
+		this.haslogiIn = haslogiIn;
+	}
+    
 }
 
