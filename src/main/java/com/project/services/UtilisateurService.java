@@ -68,9 +68,9 @@ public class UtilisateurService {
         utilisateurRepository.deleteById(id);
     }
     public Utilisateur login(String email, String password) {
-        Optional<Utilisateur> utilisateur = utilisateurRepository.findByEmail(email);
-        if (utilisateur.isPresent() && utilisateur.get().getPassword().equals(password)) { //  comparer les hash des mots de passe dans une vraie application
-            return utilisateur.get();
+        Optional<Utilisateur> utilisateurOptional = utilisateurRepository.findByEmail(email);
+        if (utilisateurOptional.isPresent() && passwordEncoder.matches(password, utilisateurOptional.get().getPassword())) {
+            return utilisateurOptional.get();
         }
         throw new EntityNotFoundException("Informations de connexion incorrectes");
     }
