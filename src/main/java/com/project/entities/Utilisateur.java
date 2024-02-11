@@ -31,6 +31,9 @@ public class Utilisateur {
     @NotNull()
     @Email(message = "L'email doit être valide")
     private String email;
+    
+    @Column(name = "has_login_in")
+    private boolean hasloginIn;
     //@JsonIgnore
     @NotNull (message = "Le mot de passe doit pas est null")
     @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
@@ -42,12 +45,13 @@ public class Utilisateur {
     public Utilisateur() {}
 
     // Constructeur complet pour faciliter la création d'instances
-    public Utilisateur(String nom, String prenom, String email, String password, int role) {
+    public Utilisateur(String nom, String prenom, String email, String password, int role, boolean hasloginIn) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.hasloginIn=hasloginIn;
     }
 
    

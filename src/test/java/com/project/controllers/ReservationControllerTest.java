@@ -53,7 +53,7 @@ public class ReservationControllerTest {
     @Test
     public void testGetAllReservationsWhenReservationsExist() throws ParseException {
         // Arrange :
-        Utilisateur utilisateur = new Utilisateur("John", "Doe", "john.doe@example.com", "password123", 1);
+        Utilisateur utilisateur = new Utilisateur("John", "Doe", "john.doe@example.com", "password123", 1,false);
         Materiel materiel = new Materiel("Test", "1.0", "123", 0);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         List<Reservation> reservations = List.of(new Reservation(dateFormat.parse("2022-02-01"),
@@ -108,7 +108,7 @@ public class ReservationControllerTest {
     @Test
     public void testMakeReservationWhenMaterielDoNotExist() throws ParseException {
         // Arrange :
-        Optional<Utilisateur> optionalUtilisateur = Optional.of(new Utilisateur("John", "Doe", "john.doe@example.com", "password123", 1));
+        Optional<Utilisateur> optionalUtilisateur = Optional.of(new Utilisateur("John", "Doe", "john.doe@example.com", "password123", 1,false));
         int idMateriel = 1;
         Long userID = 1L;
         when(utilisateurService.obtenirUtilisateurParId(userID)).thenReturn(optionalUtilisateur);
@@ -128,7 +128,7 @@ public class ReservationControllerTest {
     public void testMakeReservation() {
         try {
             // arrange :
-            Optional<Utilisateur> optionalUtilisateur = Optional.of(new Utilisateur("John", "Doe", "john.doe@example.com", "password123", 1));
+            Optional<Utilisateur> optionalUtilisateur = Optional.of(new Utilisateur("John", "Doe", "john.doe@example.com", "password123", 1,false));
             int idMateriel = 1;
             Materiel materiel = new Materiel("Test", "1.0", "123", 0);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");

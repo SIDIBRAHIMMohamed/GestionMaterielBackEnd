@@ -61,8 +61,8 @@ public class UtilisateurControllerTest {
 
     @Test
     public void getAllUtilisateurs_WhenUsersExist_ShouldReturnUsers() throws Exception {
-        Utilisateur user1 = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0);
-        Utilisateur user2 = new Utilisateur("tah", "DIDI", "tah@gmail.com", "password", 0);
+        Utilisateur user1 = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0,false);
+        Utilisateur user2 = new Utilisateur("tah", "DIDI", "tah@gmail.com", "password", 0,false);
         List<Utilisateur> allUsers = Arrays.asList(user1, user2);
 
         when(utilisateurService.listerUtilisateurs()).thenReturn(allUsers);
@@ -99,7 +99,7 @@ public class UtilisateurControllerTest {
     
     @Test
     public void getUtilisateurById_WhenFound_ShouldReturnUtilisateur() throws Exception {
-        Utilisateur user = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0);
+        Utilisateur user = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0,false);
         user.setId(1L);
 
         when(utilisateurService.obtenirUtilisateurParId(1L)).thenReturn(Optional.of(user));
@@ -133,7 +133,7 @@ public class UtilisateurControllerTest {
     
     @Test
     public void createUtilisateur_WhenValidData_ShouldCreateUser() throws Exception {
-        Utilisateur newUser = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0);
+        Utilisateur newUser = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0,false);
         when(utilisateurService.creerUtilisateur(any(Utilisateur.class))).thenReturn(newUser);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/utilisateurs")
@@ -146,7 +146,7 @@ public class UtilisateurControllerTest {
     
     @Test
     public void createUtilisateur_WhenInvalidData_ShouldReturnBadRequest() throws Exception {
-        Utilisateur newUser = new Utilisateur("", "", "", "password", 0); // Données invalides
+        Utilisateur newUser = new Utilisateur("", "", "", "password", 0,false); // Données invalides
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/utilisateurs")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -157,7 +157,7 @@ public class UtilisateurControllerTest {
 
     @Test
     public void createUtilisateur_WhenServerError_ShouldReturnInternalServerError() throws Exception {
-        Utilisateur newUser = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0);
+        Utilisateur newUser = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0,false);
         when(utilisateurService.creerUtilisateur(any(Utilisateur.class))).thenThrow(new RuntimeException());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/utilisateurs")
@@ -169,7 +169,7 @@ public class UtilisateurControllerTest {
 
     @Test
     public void updateUtilisateur_WhenFound_ShouldUpdateUser() throws Exception {
-        Utilisateur updatedUser = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "newpassword", 0);
+        Utilisateur updatedUser = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "newpassword", 0,false);
         updatedUser.setId(1L);
 
         when(utilisateurService.modifierUtilisateur(eq(1L), any(Utilisateur.class))).thenReturn(updatedUser);
@@ -189,7 +189,7 @@ public class UtilisateurControllerTest {
         when(utilisateurService.modifierUtilisateur(eq(1L), any(Utilisateur.class))).thenReturn(null);
 
         // Créer un objet Utilisateur avec des données valides
-        Utilisateur validUser = new Utilisateur("Mohamed", "SID BRAHIM", "Mohamed.sidbrahim@example.com", "password123", 0);
+        Utilisateur validUser = new Utilisateur("Mohamed", "SID BRAHIM", "Mohamed.sidbrahim@example.com", "password123", 0,false);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/utilisateurs/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -201,7 +201,7 @@ public class UtilisateurControllerTest {
 
     @Test
     public void updateUtilisateur_WhenInvalidData_ShouldReturnBadRequest() throws Exception {
-        Utilisateur invalidUser = new Utilisateur("", "", "", "password", 0); // Données invalides
+        Utilisateur invalidUser = new Utilisateur("", "", "", "password", 0,false); // Données invalides
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/utilisateurs/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -211,7 +211,7 @@ public class UtilisateurControllerTest {
     
     @Test
     public void updateUtilisateur_WhenServerError_ShouldReturnInternalServerError() throws Exception {
-        Utilisateur user = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0);
+        Utilisateur user = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0,false);
 
         when(utilisateurService.modifierUtilisateur(eq(1L), any(Utilisateur.class))).thenThrow(new RuntimeException());
 
@@ -256,7 +256,7 @@ public class UtilisateurControllerTest {
     @Test
     public void login_WithValidCredentials_ShouldReturnUser() throws Exception {
         LoginRequest loginRequest = new LoginRequest("valid.user@example.com", "password");
-        Utilisateur user = new Utilisateur("ValidUser", "LastName", "valid.user@example.com", "password", 0);
+        Utilisateur user = new Utilisateur("ValidUser", "LastName", "valid.user@example.com", "password", 0,false);
         
         
         when(utilisateurService.login(loginRequest.getEmail(), loginRequest.getPassword())).thenReturn(user);
@@ -305,8 +305,8 @@ public class UtilisateurControllerTest {
         int size = 2;
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Utilisateur user1 = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0);
-        Utilisateur user2 = new Utilisateur("Tah", "DIDI", "tah@gmail.com", "password", 0);
+        Utilisateur user1 = new Utilisateur("Mohamed", "SID BRAHIM", "mohamed@gmail.com", "password", 0,false);
+        Utilisateur user2 = new Utilisateur("Tah", "DIDI", "tah@gmail.com", "password", 0,false);
         List<Utilisateur> userList = Arrays.asList(user1, user2);
 
         Page<Utilisateur> userPage = new PageImpl<>(userList, pageable, userList.size());

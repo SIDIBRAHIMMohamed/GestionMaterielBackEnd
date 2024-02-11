@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.dto.EmailRequest;
 import com.project.dto.LoginRequest;
 import com.project.entities.Utilisateur;
 import com.project.services.UtilisateurService;
@@ -126,6 +127,18 @@ public class UtilisateurController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changerMotDePasseEtActiverLogin(@RequestBody LoginRequest loginRequest) {
+    	utilisateurservice.changerMotDePasseEtActiverLogin(loginRequest.getEmail(), loginRequest.getPassword());
+        return ResponseEntity.status(HttpStatus.OK).body("Mot de passe modifié avec succès et connexion activée.");
+    }
+    
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody EmailRequest emailRequest) {
+    	utilisateurservice.resetPassword(emailRequest.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body("Mot de passe réinitialisé avec succès.");
     }
 
 

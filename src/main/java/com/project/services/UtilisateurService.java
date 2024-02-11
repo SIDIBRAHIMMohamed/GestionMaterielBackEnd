@@ -86,7 +86,34 @@ public class UtilisateurService {
     }
     
     
-
+    public void changerMotDePasseEtActiverLogin(String email, String nouveauMotDePasse) {
+        Optional<Utilisateur> utilisateurOptional = utilisateurRepository.findByEmail(email);
+        if (utilisateurOptional.isPresent()) {
+            Utilisateur utilisateur = utilisateurOptional.get();
+            // Encoder le nouveau mot de passe
+            String motDePasseEncode = passwordEncoder.encode(nouveauMotDePasse);
+            utilisateur.setPassword(motDePasseEncode);
+            utilisateur.setHasloginIn(true); // Activer hasloginIn
+            utilisateurRepository.save(utilisateur);
+        } else {
+            // Gérer le cas où l'utilisateur n'est pas trouvé
+            throw new RuntimeException("Utilisateur introuvable avec l'email : " + email);
+        }
+    }
+    
+    public void resetPassword(String email) {
+        Optional<Utilisateur> utilisateurOptional = utilisateurRepository.findByEmail(email);
+        if (utilisateurOptional.isPresent()) {
+            Utilisateur utilisateur = utilisateurOptional.get();
+            // Réinitialiser le mot de passe à "123456"
+            String motDePasseEncode = passwordEncoder.encode("123456");
+            utilisateur.setPassword(motDePasseEncode);
+            utilisateurRepository.save(utilisateur);
+        } else {
+            // Gérer le cas où l'utilisateur n'est pas trouvé
+            throw new RuntimeException("Utilisateur introuvable avec l'email : " + email);
+        }
+    }
 
 
 

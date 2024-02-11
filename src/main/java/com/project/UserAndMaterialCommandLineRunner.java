@@ -41,20 +41,25 @@ public class UserAndMaterialCommandLineRunner implements CommandLineRunner{
                 return;
             }
 
-            Utilisateur admin = new Utilisateur("admin", "admin", "admin.admin@univ-tours.fr", "admin-password", 1);
+            Utilisateur admin = new Utilisateur("admin", "admin", "admin.admin@univ-tours.fr", "admin-password", 1,true);
+            
             
             utilisateurService.creerUtilisateur(admin);
             // create three users with role 0 give them names
-            Utilisateur user1 = new Utilisateur("SID BRAHIM", "Mohamed","mohamed.sidbrahim@entreprise.fr","John123", 0);
+            Utilisateur user1 = new Utilisateur("SID BRAHIM", "Mohamed","mohamed.sidbrahim@entreprise.fr","John123", 0,false);
+            
             utilisateurService.creerUtilisateur(user1);
 
-            Utilisateur user2 = new Utilisateur("DIDI", "TAH", "tah.didi@entreprise.fr", "Lionel123", 0);
+            Utilisateur user2 = new Utilisateur("DIDI", "TAH", "tah.didi@entreprise.fr", "Lionel123", 0,false);
+          
             utilisateurService.creerUtilisateur(user2);
 
-            Utilisateur user3 = new Utilisateur("AHMED", "AHMED", "ahmed.ahmed@entreprise.fr", "Jack123", 0);
+            Utilisateur user3 = new Utilisateur("AHMED", "AHMED", "ahmed.ahmed@entreprise.fr", "Jack123", 0,false);
+        
             utilisateurService.creerUtilisateur(user3);
 
-            Utilisateur user4 = new Utilisateur("EL VILALY", "El meky", "elmekyelvilaly@entreprise.fr", "Soffie123", 0);
+            Utilisateur user4 = new Utilisateur("EL VILALY", "El meky", "elmekyelvilaly@entreprise.fr", "Soffie123", 0,false);
+           
             utilisateurService.creerUtilisateur(user4);
     
             List<Materiel> materials = new ArrayList<>();
