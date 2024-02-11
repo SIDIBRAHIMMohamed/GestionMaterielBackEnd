@@ -1,0 +1,37 @@
+-------------------------------------------------------------------------------
+Test set: com.project.controllers.UtilisateurControllerTest
+-------------------------------------------------------------------------------
+Tests run: 22, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 3.581 s <<< FAILURE! -- in com.project.controllers.UtilisateurControllerTest
+com.project.controllers.UtilisateurControllerTest.updateUtilisateur_WhenNotFound_ShouldReturnNotFound -- Time elapsed: 0.135 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<404> but was:<400>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.project.controllers.UtilisateurControllerTest.updateUtilisateur_WhenNotFound_ShouldReturnNotFound(UtilisateurControllerTest.java:194)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.project.controllers.UtilisateurControllerTest.updateUtilisateur_WhenServerError_ShouldReturnInternalServerError -- Time elapsed: 0.022 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<500> but was:<400>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.project.controllers.UtilisateurControllerTest.updateUtilisateur_WhenServerError_ShouldReturnInternalServerError(UtilisateurControllerTest.java:218)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.project.controllers.UtilisateurControllerTest.updateUtilisateur_WhenFound_ShouldUpdateUser -- Time elapsed: 0.010 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<400>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.project.controllers.UtilisateurControllerTest.updateUtilisateur_WhenFound_ShouldUpdateUser(UtilisateurControllerTest.java:177)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+

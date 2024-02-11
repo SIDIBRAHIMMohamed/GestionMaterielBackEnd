@@ -1,5 +1,6 @@
 package com.project.controllers;
 
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -37,7 +38,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -47,6 +47,7 @@ import org.springframework.data.domain.Pageable;
 
 
 @WebMvcTest(UtilisateurController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class UtilisateurControllerTest {
 
     @Autowired
