@@ -1,6 +1,7 @@
 package com.project.entities;
 
 import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +31,7 @@ public class Utilisateur {
     @NotNull()
     @Email(message = "L'email doit être valide")
     private String email;
+    @JsonIgnore
     @NotNull (message = "Le mot de passe doit pas est null")
     @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
     private String password;

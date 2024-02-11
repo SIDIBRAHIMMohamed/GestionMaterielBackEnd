@@ -118,7 +118,7 @@ public class UtilisateurController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             Utilisateur utilisateur = utilisateurservice.login(loginRequest.getEmail(), loginRequest.getPassword());
-            return ResponseEntity.ok(utilisateur); // On  pout retourner un objet JWT 
+            return ResponseEntity.ok(utilisateur); 
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {

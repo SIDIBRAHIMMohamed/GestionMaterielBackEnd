@@ -13,45 +13,49 @@ import com.project.entities.Utilisateur;
 import com.project.repositories.MaterielRepository;
 import com.project.repositories.ReservationRepository;
 import com.project.repositories.UtilisateurRepository;
+import com.project.services.UtilisateurService;
 
 @Component
 public class UserAndMaterialCommandLineRunner implements CommandLineRunner{
     
 
-        private final UtilisateurRepository userRepository;
-    
+        
+        private final UtilisateurService utilisateurService;
 
         private final MaterielRepository materialRepository;
 
         private final ReservationRepository reservationRepository;
+        
 
-        public UserAndMaterialCommandLineRunner(UtilisateurRepository userRepository, MaterielRepository materialRepository, ReservationRepository reservationRepository) {
-            this.userRepository = userRepository;
+        public UserAndMaterialCommandLineRunner(UtilisateurService utilisateurService, MaterielRepository materialRepository, ReservationRepository reservationRepository) {
+            this.utilisateurService= utilisateurService;
             this.materialRepository = materialRepository;
             this.reservationRepository = reservationRepository;
+           
         }
     
         @Override
         public void run(String... args) throws Exception {
 
-            if(userRepository.count() > 0 || materialRepository.count() > 0) {
+            if(utilisateurService.CountUsers() > 0 || materialRepository.count() > 0) {
                 return;
             }
 
-            Utilisateur admin = new Utilisateur("admin", "admin", "admin.admin@univ-tours.fr", "admin-password", 0);
-            userRepository.save(admin);
+            Utilisateur admin = new Utilisateur("admin", "admin", "admin.admin@univ-tours.fr", "admin-password", 1);
+            
+            utilisateurService.creerUtilisateur(admin);
             // create three users with role 0 give them names
-            Utilisateur user1 = new Utilisateur("John", "Jack","jack.john@entreprise.fr","John123", 0);
-            userRepository.save(user1);
+            Utilisateur user1 = new Utilisateur("Mohamed", "SID BRAHIM","Mohamed.SIDBRAHIM@entreprise.fr","John123", 0);
+            utilisateurService.creerUtilisateur(user1);
 
-            Utilisateur user2 = new Utilisateur("Lionel", "Smith", "lionel.smith@entreprise.fr", "Lionel123", 0);
-            userRepository.save(user2);
+            Utilisateur user2 = new Utilisateur("TAH", "DIDI", "TAHDIDI@entreprise.fr", "Lionel123", 0);
+            utilisateurService.creerUtilisateur(user2);
 
-            Utilisateur user3 = new Utilisateur("Jack", "Johnson", "jack.johnson@entreprise.fr", "Jack123", 0);
-            userRepository.save(user3);
+            Utilisateur user3 = new Utilisateur("Ahmed", "ahmed", "ahmed.ahmed@entreprise.fr", "Jack123", 0);
+            utilisateurService.creerUtilisateur(user3);
 
-            Utilisateur user4 = new Utilisateur("Soffie", "Williams", "soffie.williams@entreprise.fr", "Soffie123", 0);
-            userRepository.save(user4);
+            Utilisateur user4 = new Utilisateur("ElMeky", "ELVilaly", "elmekyelvilaly@entreprise.fr", "Soffie123", 0);
+            utilisateurService.creerUtilisateur(user4);
     
             List<Materiel> materials = new ArrayList<>();
 
